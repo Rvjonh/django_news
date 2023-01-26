@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}
+{{ article.title }}
+{% endblock title %}
+
+{% block content %}
+<div class="link-back card-header d-flex">
+    <div class="flex-grow-1">
+        <h2 class="font-weight-bold">
+            {{ article.title }}
+        </h2>
+        <div class="d-flex justify-content-start">
+            <p>By <span class="fw-bolder">{{ article.author }}</span></p>
+            &nbsp;|&nbsp;
+            <p>{{ article.date|date:"d-m-Y" }}</p>
+        </div>
+    </div>
+    {% if user.is_authenticated and user == article.author%}
+    <div class="d-flex flex-column">
+        <a class="btn btn-info text-white" href="{% url 'article_edit' article.pk %}">Edit</a>
+        <a class="btn btn-danger" href="{% url 'article_delete' article.pk %}">Delete</a>
+    </div>
+    {% endif %}
+</div>
+
+<div class="card-body">
+    {{ object.body }}
+</div>
+
+<div class="my-4 container d-flex justify-content-between">
+    <a class="btn btn-outline-primary" href="{% url 'article_list' %}">
+        Back to All Articles
+    </a>.
+</div>
+
+<hr>
+<div class="container d-flex justify-content-start">
+    {% if user.is_authenticated %}
+    <div class="w-50">
+        <h4>Add New Comment</h4>
+        <p>As: {{ user.username }}</p>
+        <form method="post">{% csrf_token %}
+            {{ form|crispy }}
+
+            <div class="container d-flex justify-content-end">
+                <button class="btn btn-success" type="submit">Comment</button>
+            </div>
+        </form>
+    </div>
+    {% else %}
+    <div class="w-50 d-flex flex-column align-items-center">
+        <h4>You need an account</h4>
+        <div>
+            <a href=" {% url 'login' %}?next={{request.path}}">Log in</a>
+            or
+            <a href="{% url 'signup' %}?next={{request.path}}">Sign Up</a>
+        </div>
+        <p>And start commenting</p>
+    </div>
+    {% endif %}
+</div>
+
+
+<hr>
+<div class="d-flex flex-column w-50">
+
+    <div class="d-flex flex-column">
+        <h4>Comments {{ article.comment_set.count }}</h4>
+        {% if article.comment_set.count == 0 %}
+        <p class="badge rounded-pill text-bg-warning py-2">No Comments Yet</p>
+        {% endif %}
+
+        {% for comment in comments_page_obj.object_list %}
+        <div class="border border-2 rounded-2 d-flex flex-column p-2 my-2">
+            <h6 class="d-flex">
+                <span class="fw-bold">{{ comment.author|title }}:</span>
+                <span class="ms-auto">{{ comment.date|date:"d-m-Y" }}</span>
+            </h6>
+            <p>{{ comment }}</p>
+        </div>
+        {% endfor %}
+    </div>
+
+
+    <div class="mt-auto container d-flex justify-content-center">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination pagination-sm d-flex justify-content-center align-items-center">
+                {% if comments_page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page=1">First Page</a></li>
+                <li class="page-item"><a class="page-link"
+                        href="?page={{ comments_page_obj.previous_page_number }}">Previous</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled"><a class="page-link">First Page</a></li>
+                <li class="page-item disabled"><a class="page-link">Previous</a>
+                </li>
+                {% endif %}
+
+                {% for num_page in comments_page_obj.paginator.page_range %}
+                {% if num_page == comments_page_obj.number %}
+                <li class="page-item active"><a class="page-link">{{ num_page }}</a></li>
+                {% else %}
+                <li class="page-item"><a class="page-link" href="?page={{ num_page }}">{{ num_page }}</a></li>
+                {% endif %}
+                {% endfor %}
+
+
+                {% if comments_page_obj.has_next %}
+                <li class="page-item"><a class="page-link"
+                        href="?page={{ comments_page_obj.next_page_number }}">Next</a>
+                </li>
+                <li class="page-item"><a class="page-link" href="?page={{ comments_page_obj.paginator.num_pages }}">Last
+                        Page</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled"><a class="page-link">Next</a></li>
+                <li class="page-item disabled"><a class="page-link">Last Page</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</div>
+
+{% endblock content %}

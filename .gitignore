@@ -1,0 +1,9 @@
+# Django gitignore file
+
+.env
+
+db.sqlite3
+
+.venv/
+__pycache__/
+*.pyc

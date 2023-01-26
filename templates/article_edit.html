@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container border border-2 border-secondary rounded-2 p-4" style="max-width: 60em;">
+    <h1>Edit</h1>
+    <form action="" method="post">{% csrf_token %}
+        {{ form|crispy }}
+
+        <div class="container d-flex justify-content-between">
+            <a class="btn btn-danger" href="{% url 'article_detail' article.pk %}">Cancel</a>
+            <button class="btn btn-info ml-2" type="submit">Update</button>
+        </div>
+    </form>
+</div>
+{% endblock content %}

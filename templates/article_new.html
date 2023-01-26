@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+New Article
+{% endblock title %}
+
+{% block content %}
+<div class="container border border-2 border-secondary rounded-2 p-4" style="max-width: 60em;">
+    <h2>New Article</h2>
+    <form method="post">{% csrf_token %}
+        {{ form|crispy }}
+
+        <div class="container d-flex justify-content-between">
+            <a href="{% url 'home' %}" class="btn btn-danger">Cancel</a>
+            <button type="submit" class="btn btn-success ml-2">Save</button>
+        </div>
+    </form>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,5 @@
+div.link-back:hover,
+.link-article:hover {
+    background-color: rgb(216, 216, 216);
+    transition: 0.25s ease;
+}

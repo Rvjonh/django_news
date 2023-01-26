@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+Account Update
+{% endblock title %}
+
+{% block content %}
+<div class="container border border-2 border-secondary rounded-2 p-4" style="max-width: 30em;">
+    <h2 class="text-center">Account Info</h2>
+    <form method="post">{% csrf_token %}
+        {{ form|crispy }}
+
+        <div class="mb-3">
+            <label class="form-label" for="passwordx">Password*</label>
+            <input class="numberinput form-control" type="password" value="••••••••••" contenteditable="false"
+                disabled="disabled">
+            <p>You cannot update the password by itself, but change it here in this form. <a
+                    href="{% url 'password_change' %}">Change Password</a></p>
+        </div>
+        <div class="container">
+            <button class="btn btn-success fw-bolder" type="submit">Update</button>
+        </div>
+    </form>
+</div>
+{% endblock content %}

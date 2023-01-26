@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/articles-helper.css' %}" />
+{% endblock style %}
+
+{% block title %}
+News - Home
+{% endblock title %}
+
+{% block above_header %}
+{% include 'components/navbar.html' %}
+{% endblock above_header %}
+
+{% block content %}
+
+<div class="title my-2 text-center">
+    <h2>Latest News</h2>
+</div>
+
+
+{% for article in article_list %}
+<div class="card my-3">
+    <div class="link-back card-header d-flex">
+        <div class="flex-grow-1">
+            <h3 class="font-weight-bold link-article">
+                <a href="{% url 'article_detail' article.pk %}" class="nav-link link-primary">
+                    {{ article.title }}
+                </a>
+            </h3>
+            <div class="d-flex justify-content-start">
+                <p>By <span class="fw-bolder">{{ article.author }}</span></p>
+                &nbsp;|&nbsp;
+                <p>{{ article.date|date:"d-m-Y" }}</p>
+            </div>
+        </div>
+        {% if user.is_authenticated and user == article.author%}
+        <div class="d-flex flex-column">
+            <a class="btn btn-info text-white" href="{% url 'article_edit' article.pk %}">Edit</a>
+            <a class="btn btn-danger" href="{% url 'article_delete' article.pk %}">Delete</a>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="card-body">
+        {{ article.body | truncatechars:255 }}
+    </div>
+
+    <div class="card-footer text-muted">
+        <p class="fw-bold my-0">Comments: {{ article.comment_set.count }}</p>
+    </div>
+</div>
+{% endfor %}
+
+<div class="mt-auto container d-flex justify-content-center">
+    <nav aria-label="Page navigation example">
+        <ul class="pagination pagination-sm d-flex justify-content-center align-items-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page=1">First Page</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><a class="page-link">First Page</a></li>
+            <li class="page-item disabled"><a class="page-link">Previous</a>
+            </li>
+            {% endif %}
+
+            {% for num_page in page_obj.paginator.page_range %}
+            {% if num_page == page_obj.number %}
+            <li class="page-item active"><a class="page-link">{{ num_page }}</a></li>
+            {% else %}
+            <li class="page-item"><a class="page-link" href="?page={{ num_page }}">{{ num_page }}</a></li>
+            {% endif %}
+            {% endfor %}
+
+            <!--  
+            <li class="page-item">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </li> 
+            -->
+
+            {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last Page</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><a class="page-link">Next</a></li>
+            <li class="page-item disabled"><a class="page-link">Last Page</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+
+{% endblock content %}
