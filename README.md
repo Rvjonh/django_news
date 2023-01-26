@@ -31,7 +31,22 @@ Follow every command below to put it running in your machine
     You need to fill all the variables ...
     ```
 
-3. Start the development server
+3. Configure your database system
+
+In this section you will have to create a mysql database and add it to in the file django_project/settings, and modify the DATABASES section, if you have MySQL in your computer will easy, just follow these steps: [How to connect MySQL to Django](https://www.javatpoint.com/how-to-connect-mysql-to-django)
+
+or just change the DATABASE confi to:
+
+```CMD
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
+    }
+}
+```
+
+4. Start the development server
 
     ```CMD
     py manage.py makemigrations
@@ -39,7 +54,7 @@ Follow every command below to put it running in your machine
     py manage.py runserver
     ```
 
-4. Visit your server website url for development (Example)
+5. Visit your server website url for development (Example)
 
     ```CMD
     Watching for file changes with StatReloader
