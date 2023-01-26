@@ -42,7 +42,7 @@ def Password_reset_request(request):
         password_reset_form = PasswordResetForm(request.POST)
         if password_reset_form.is_valid():
             data = password_reset_form.cleaned_data["email"]
-            associated_users = User.objects.filter(Q(email=data))
+            associated_users = CustomUser.objects.filter(Q(email=data))
             if associated_users.exists():
                 for user in associated_users:
                     subject = "Password Reset Requested"
